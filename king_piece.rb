@@ -1,20 +1,25 @@
-require_relative './piece.rb'
+# require_relative './piece.rb'
 
 module Checkers
   class KingPiece < Piece
     attr_accessor :color
 
-    def initialize(pos, color, board)
-      @position, @color, @board = pos, color, board
+    def initialize(pos, color)
+      super(pos, color)
+      @position, @color = pos, color
     end
 
     def to_s
-      color == :white ? "\u20DD" : "\u25C9"
+      color == :white ? "\u25C9" : "\u25CE"
     end
 
-    private
-
-    def valid_move_seq?
+    def slide_moves
+      { :white => [[-1, 1], [-1, -1]], :black => [[1, 1], [1, -1]] }
     end
+
+    def jump_moves
+      { :white => [[-2, 2], [-2, -2]], :black => [[2, 2], [2, -2]] }
+    end
+
   end
 end

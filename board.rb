@@ -1,5 +1,6 @@
 require 'colorize'
 require_relative './piece'
+require_relative './king_piece.rb'
 
 module Checkers
   class Board
@@ -24,26 +25,6 @@ module Checkers
       end
     end
 
-    def init_board
-      board = Array.new(8) { Array.new(8) { nil } }
-
-      (0..2).each do |row|
-        (0...board.length).each do |col|
-          next if (col % 2) != (row % 2)
-          board[row][col] = Piece.new([row, col], :black, self)
-        end
-      end
-
-      (5..7).each do |row|
-        (0...board.length).each do |col|
-          next if (col % 2) != (row % 2)
-          board[row][col] = Piece.new([row, col], :white, self)
-        end
-      end
-
-      board
-    end
-
     def move(start_pos, end_pos)
       if valid_slide_move?(start_pos, end_pos)
         perform_slide(start_pos, end_pos)
@@ -61,9 +42,9 @@ module Checkers
       piece = piece(start_pos)
       self[start_pos] = nil
       if (end_pos[0] == 0) && (piece.color == :white)
-#        self[end_pos] = KingPiece.new(end_pos, piece.color, self)
+        self[end_pos] = KingPiece.new(end_pos, piece.color)
       elsif (end_pos[0] == 7) && (piece.color == :black)
-#        self[end_pos] = KingPiece.new(end_pos, piece.color, self)
+        self[end_pos] = KingPiece.new(end_pos, piece.color)
       else
         self[end_pos] = piece
       end
@@ -131,6 +112,26 @@ module Checkers
 
     def occupied_by?(pos, color)
       piece(pos) && piece(pos).color == color
+    end
+
+    def init_board
+      board = Array.new(8) { Array.new(8) { nil } }
+
+      (0..2).each do |row|
+        (0...board.length).each do |col|
+          next if (col % 2) != (row % 2)
+          board[row][col] = Piece.new([row, col], :black)
+        end
+      end
+
+      (5..7).each do |row|
+        (0...board.length).each do |col|
+          next if (col % 2) != (row % 2)
+          board[row][col] = Piece.new([row, col], :white)
+        end
+      end
+
+      board
     end
 
   end

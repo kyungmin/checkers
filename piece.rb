@@ -1,3 +1,4 @@
+# require_relative './king_piece.rb'
 
 module Checkers
 
@@ -5,10 +6,10 @@ module Checkers
   end
 
   class Piece
-    attr_accessor :color, :board
+    attr_accessor :color
 
-    def initialize(pos, color, board)
-      @position, @color, @board = pos, color, board
+    def initialize(pos, color)
+      @position, @color, @board = pos, color
     end
 
     def to_s

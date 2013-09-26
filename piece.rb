@@ -30,11 +30,11 @@ module Checkers
     end
 
     def slide_moves
-      { :white => [[-1, 1], [-1, -1]], :black => [[1, 1], [-1, 1]] }
+      { :white => [[-1, 1], [-1, -1]], :black => [[1, 1], [1, -1]] }
     end
 
     def jump_moves
-      { :white => [[-2, 2], [-2, -2]], :black => [[2, 2], [-2, 2]] }
+      { :white => [[-2, 2], [-2, -2]], :black => [[2, 2], [2, -2]] }
     end
 
     def perform_slide(start_pos, end_pos)
@@ -44,6 +44,8 @@ module Checkers
     end
 
     def perform_jump(start_pos, end_pos)
+      mid_pos = [(start_pos[0] + end_pos [0]) / 2, (start_pos[1] + end_pos [1]) / 2]
+      board[mid_pos] = nil
 
       perform_slide(start_pos, end_pos)
     end
@@ -75,6 +77,7 @@ module Checkers
       jump_moves[color].each do |valid_move|
         valid_moves << [start_pos[0] + valid_move[0], start_pos[1] + valid_move[1]]
       end
+
       return false unless valid_moves.include?(end_pos)
 
       mid_pos = [(start_pos[0] + end_pos [0]) / 2, (start_pos[1] + end_pos [1]) / 2]

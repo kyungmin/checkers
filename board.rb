@@ -79,3 +79,6 @@ checkers.show_board
 checkers.move([4,4], [2,2])
 checkers.show_board
 checkers.move([2,4], [4,6])
+checkers.show_board
+checkers.move([1,3], [3,1])
+checkers.show_board

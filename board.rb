@@ -67,8 +67,8 @@ module Checkers
       piece.slide_moves[piece.color].each do |valid_move|
         valid_moves << [start_pos[0] + valid_move[0], start_pos[1] + valid_move[1]]
       end
-      return false unless valid_moves.include?(end_pos)
-      true
+
+      valid_moves.include?(end_pos)
     end
 
     def valid_jump_move?(start_pos, end_pos)
@@ -80,11 +80,10 @@ module Checkers
         valid_moves << [start_pos[0] + valid_move[0], start_pos[1] + valid_move[1]]
       end
 
-      return false unless valid_moves.include?(end_pos)
-
       mid_pos = [(start_pos[0] + end_pos [0]) / 2, (start_pos[1] + end_pos [1]) / 2]
-      false if occupied_by?(mid_pos, other_color(piece.color))
-      true
+      return false if occupied_by?(mid_pos, piece.color)
+
+      valid_moves.include?(end_pos)
     end
 
     def other_color(color)
@@ -93,8 +92,7 @@ module Checkers
 
     def out_of_range?(start_pos, end_pos)
       move_sequence = [start_pos, end_pos]
-      return false if move_sequence.all? { |move| move[0].between?(0,7) && move[1].between?(0,7) }
-      true
+      !move_sequence.all? { |move| move[0].between?(0,7) && move[1].between?(0,7) }
     end
 
     def piece(pos)

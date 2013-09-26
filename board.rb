@@ -9,24 +9,9 @@ module Checkers
       @board = init_board
     end
 
-    def init_board
-      board = Array.new(8) { Array.new(8) { nil } }
-
-      (0..2).each do |row|
-        (0...board.length).each do |col|
-          next if (col % 2) != (row % 2)
-          board[row][col] = Piece.new([row, col], :black, board)
-        end
-      end
-
-      (5..7).each do |row|
-        (0...board.length).each do |col|
-          next if (col % 2) != (row % 2)
-          board[row][col] = Piece.new([row, col], :white, board)
-        end
-      end
-
-      board
+    def move(start_pos, end_pos)
+      piece = piece(start_pos)
+      piece.perform_moves(start_pos, end_pos)
     end
 
     def show_board
@@ -44,9 +29,53 @@ module Checkers
       end
     end
 
+    def piece(pos)
+      @board[pos[0]][pos[1]]
+    end
+
+    def []=(pos, value)
+      @board[pos[0]][pos[1]] = value
+    end
+
+    def occupied?(pos)
+      !piece(pos).nil?
+    end
+
+    def occupied_by?(pos, color)
+      piece(pos) && piece(pos).color == color
+    end
+
+    private
+
+    def init_board
+      board = Array.new(8) { Array.new(8) { nil } }
+
+      (0..2).each do |row|
+        (0...board.length).each do |col|
+          next if (col % 2) != (row % 2)
+          board[row][col] = Piece.new([row, col], :black, self)
+        end
+      end
+
+      (5..7).each do |row|
+        (0...board.length).each do |col|
+          next if (col % 2) != (row % 2)
+          board[row][col] = Piece.new([row, col], :white, self)
+        end
+      end
+
+      board
+    end
+
   end
 end
 
 checkers = Checkers::Board.new
 checkers.show_board
-#checkers.perform_moves([3,3], [4,4])
+checkers.move([2,2], [3,3])
+checkers.show_board
+checkers.move([5,3], [4,4])
+checkers.show_board
+checkers.move([4,4], [2,2])
+checkers.show_board
+checkers.move([2,4], [4,6])

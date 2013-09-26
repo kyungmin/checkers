@@ -41,11 +41,9 @@ module Checkers
     def perform_slide(start_pos, end_pos)
       piece = piece(start_pos)
       self[start_pos] = nil
-      if (end_pos[0] == 0) && (piece.color == :white)
+      if conver_to_king?(end_pos, piece)
         self[end_pos] = KingPiece.new(end_pos, piece.color)
-      elsif (end_pos[0] == 7) && (piece.color == :black)
-        self[end_pos] = KingPiece.new(end_pos, piece.color)
-      else
+    else
         self[end_pos] = piece
       end
     end
@@ -59,15 +57,19 @@ module Checkers
 
     private
 
+    def conver_to_king?(pos, piece)
+      (pos[0] == 0) && (piece.color == :white) || (pos[0] == 7) && (piece.color == :black)
+    end
+
     def valid_slide_move?(start_pos, end_pos)
       return false if occupied?(end_pos) || out_of_range?(start_pos, end_pos)
 
       piece = piece(start_pos)
       valid_moves = []
-      piece.slide_moves[piece.color].each do |valid_move|
+      piece.slide_moves(piece.color).each do |valid_move|
         valid_moves << [start_pos[0] + valid_move[0], start_pos[1] + valid_move[1]]
       end
-
+      p end_pos, valid_moves
       valid_moves.include?(end_pos)
     end
 
@@ -76,7 +78,7 @@ module Checkers
 
       valid_moves = []
       piece = piece(start_pos)
-      piece.jump_moves[piece.color].each do |valid_move|
+      piece.jump_moves(piece.color).each do |valid_move|
         valid_moves << [start_pos[0] + valid_move[0], start_pos[1] + valid_move[1]]
       end
 
@@ -155,6 +157,10 @@ checkers.show_board
 checkers.move([3,7], [1,5])
 checkers.show_board
 checkers.move([0,4], [1,3])
+checkers.show_board
+checkers.move([1,5], [0,4])
+checkers.show_board
+checkers.move([0,4], [1,5])
 checkers.show_board
 checkers.move([1,5], [0,4])
 checkers.show_board

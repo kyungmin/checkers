@@ -1,4 +1,5 @@
 require_relative './piece.rb'
+
 module Checkers
   class KingPiece < Piece
     attr_accessor :color

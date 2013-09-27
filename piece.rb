@@ -2,9 +2,6 @@
 
 module Checkers
 
-  class InvalidMoveException < Exception
-  end
-
   class Piece
     attr_accessor :color
 

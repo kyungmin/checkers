@@ -39,12 +39,13 @@ module Checkers
     end
 
     def perform_moves!(start_pos, end_pos)
+      rails InvalidMoveException.new("Nothing there. Try again.") if piece(start_pos).nil?
 
       if valid_slide_move?(start_pos, end_pos)
         perform_slide(start_pos, end_pos)
       elsif valid_jump_move?(start_pos, end_pos)
         perform_jump(start_pos, end_pos)
-        if jumps_left?(end_pos)
+        if jumps_available?(end_pos)
           raise InvalidMoveException.new("Make another jump.")
         end
       else
@@ -68,7 +69,7 @@ module Checkers
       perform_slide(start_pos, end_pos)
     end
 
-    def jumps_left?(start_pos)
+    def jumps_available?(start_pos)
       valid_moves = []
       piece = piece(start_pos)
       piece.jump_moves(piece.color).each do |offset|
@@ -93,9 +94,6 @@ module Checkers
     end
 
     def valid_slide_move?(start_pos, end_pos)
-      puts "#{start_pos}, #{end_pos}"
-      p occupied?(end_pos)
-      p out_of_range?(start_pos, end_pos)
       return false if occupied?(end_pos) || out_of_range?(start_pos, end_pos)
 
       piece = piece(start_pos)
@@ -103,15 +101,10 @@ module Checkers
       piece.slide_moves(piece.color).each do |valid_move|
         valid_moves << [start_pos[0] + valid_move[0], start_pos[1] + valid_move[1]]
       end
-      puts "#{valid_moves}"
       valid_moves.include?(end_pos)
     end
 
     def valid_jump_move?(start_pos, end_pos)
-      puts "#{start_pos}, #{end_pos}"
-      p occupied?(end_pos)
-      p out_of_range?(start_pos, end_pos)
-
       return false if occupied?(end_pos) || out_of_range?(start_pos, end_pos)
 
       valid_moves = []
@@ -119,7 +112,6 @@ module Checkers
       piece.jump_moves(piece.color).each do |valid_move|
         valid_moves << [start_pos[0] + valid_move[0], start_pos[1] + valid_move[1]]
       end
-      puts "#{valid_moves}"
       mid_pos = [(start_pos[0] + end_pos [0]) / 2, (start_pos[1] + end_pos [1]) / 2]
       return false if occupied_by?(mid_pos, piece.color)
 
@@ -131,8 +123,7 @@ module Checkers
     end
 
     def out_of_range?(start_pos, end_pos)
-      move_sequence = [start_pos, end_pos]
-      !move_sequence.all? { |move| move[0].between?(0,7) && move[1].between?(0,7) }
+      !(start_pos + end_pos).all? { |coord| coord.between?(0,7) }
     end
 
     def piece(pos)

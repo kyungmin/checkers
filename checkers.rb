@@ -28,9 +28,12 @@ module Checkers
 
     def get_input
       puts "#{current_player.capitalize}: Enter move (e.g., a1b2..)."
-      input = gets.chomp.gsub('/[^a-h1-8\s]/', "")
-      start_pos = [GRID_MAP[input[0]], GRID_MAP[input[1]]]
-      end_pos = [GRID_MAP[input[2]], GRID_MAP[input[3]]]
+      input = gets.chomp.gsub('/[^a-hq1-8\s]/', "")
+      if input == "q"
+        exit
+      end
+      start_pos = [GRID_MAP[input[1]], GRID_MAP[input[0]]]
+      end_pos = [GRID_MAP[input[3]], GRID_MAP[input[2]]]
       [start_pos, end_pos]
     end
 
